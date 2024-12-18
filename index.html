@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            flex-direction: column;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .company-name {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .input-group input,
+        .input-group button {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .input-group button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+
+        .input-group button:hover {
+            background-color: #218838;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f8f9fa;
+        }
+
+        .summary {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .download-btn {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .history-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-group {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .search-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .search-group button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+
+        .search-group button:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+            color: red;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            color: darkred;
+        }
+        @media (max-width: 768px) {
+            .container, .history-container {
+                padding: 15px;
+            }
+
+            .input-group input,
+            .input-group button {
+                font-size: 14px;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+
+            .summary {
+                font-size: 14px;
+            }
+
+            .download-btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .search-group input {
+                font-size: 14px;
+            }
+
+            .search-group button {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .company-name {
+                font-size: 18px;
+            }
+
+            .input-group input,
+            .input-group button {
+                font-size: 14px;
+            }
+
+            .summary {
+                font-size: 14px;
+            }
+
+            .download-btn {
+                padding: 10px;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .company-name {
+                font-size: 18px;
+            }
+
+            .input-group input,
+            .input-group button {
+                font-size: 12px;
+            }
+
+            table th, table td {
+                padding: 6px;
+            }
+
+            .summary {
+                font-size: 12px;
+            }
+
+            .download-btn {
+                font-size: 12px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="company-name">Vishwalatarati Digital Solutions Pvt Ltd</div>
+    <h1>Invoice</h1>
+
+    <!-- Service Taker Name Input -->
+    <div class="input-group">
+        <label for="service-taker-name">Service Taker's Name:</label>
+        <input type="text" id="service-taker-name" placeholder="Enter Service Taker's Name">
+    </div>
+    <div class="input-group">
+        <label for="service-taker-name">Invoice Number :</label>
+        <input type="text" id="invoice-number" placeholder="Enter Invoice Number">
+    </div>
+
+    <!-- Date Input -->
+    <div class="input-group">
+        <label for="bill-date">Date:</label>
+        <input type="date" id="bill-date" value="${new Date().toISOString().split('T')[0]}">
+    </div>
+
+    <!-- Item Entry Section -->
+    <div class="input-group">
+        <input type="text" id="item-name" placeholder="Item Name">
+        <input type="number" id="item-price" placeholder="Price">
+        <input type="number" id="item-quantity" placeholder="Quantity">
+        <button onclick="addItem()">Add Item</button>
+    </div>
+
+    <!-- Item Table -->
+    <table id="item-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Summary Section -->
+    <div class="summary">
+        <div><strong>Subtotal:</strong> ₹<span id="subtotal">0.00</span></div>
+        <div><strong>Tax (3%):</strong> ₹<span id="tax">0.00</span></div>
+        <div><strong>Total:</strong> ₹<span id="total">0.00</span></div>
+    </div>
+
+    <!-- Download Button -->
+    <button class="download-btn" onclick="finalizeBill()">Finalize and Save Bill</button>
+</div>
+
+<div class="history-container">
+    <h2>Bill History</h2>
+    <div class="search-group">
+        <input type="text" id="search-name" placeholder="Search by Service Taker's Name">
+        <button onclick="searchBills()">Search</button>
+    </div>
+    <table id="history-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Action</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    let subtotal = 0;
+    const billHistory = [];
+
+    function addItem() {
+        const name = document.getElementById('item-name').value;
+        const price = parseFloat(document.getElementById('item-price').value);
+        const quantity = parseInt(document.getElementById('item-quantity').value);
+
+        if (name && !isNaN(price) && !isNaN(quantity)) {
+            const total = price * quantity;
+            subtotal += total;
+
+            // Add item to table
+            const tableBody = document.getElementById('item-table').getElementsByTagName('tbody')[0];
+            const row = tableBody.insertRow();
+            row.innerHTML = `<td>${name}</td><td>₹${price}</td><td>${quantity}</td><td>₹${total}</td>`;
+
+            updateTotals();
+        }
+    }
+
+    function updateTotals() {
+        const tax = subtotal * 0.18;
+        const total = subtotal + tax;
+
+        document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+        document.getElementById('tax').textContent = tax.toFixed(2);
+        document.getElementById('total').textContent = total.toFixed(2);
+    }
+
+    function finalizeBill() {
+        const serviceTakerName = document.getElementById('service-taker-name').value;
+        const date = document.getElementById('bill-date').value;
+        const total = parseFloat(document.getElementById('total').textContent);
+
+        if (serviceTakerName && date && total > 0) {
+            // Save bill to history
+            billHistory.push({ name: serviceTakerName, date, total });
+
+            // Update bill history table
+            updateHistoryTable();
+
+            alert('Bill saved successfully!');
+            // Clear fields for next bill
+            document.getElementById('service-taker-name').value = '';
+            document.getElementById('item-table').getElementsByTagName('tbody')[0].innerHTML = '';
+            subtotal = 0;
+            updateTotals();
+        } else {
+            alert('Please fill out all fields and add items to the bill.');
+        }
+    }
+
+    function updateHistoryTable() {
+        const tableBody = document.getElementById('history-table').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = '';
+        billHistory.forEach((bill, index) => {
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${bill.name}</td>
+                <td>${bill.date}</td>
+                <td>₹${bill.total.toFixed(2)}</td>
+                <td><button onclick="downloadReceipt(${index})">Download Receipt</button></td>
+                <td><span class="delete-btn" onclick="confirmDelete(${index})">🗑️</span></td>
+            `;
+        });
+    }
+
+    function confirmDelete(index) {
+        const confirmDelete = window.confirm('Are you sure you want to delete this receipt?');
+        if (confirmDelete) {
+            billHistory.splice(index, 1); // Remove bill from history
+            updateHistoryTable();
+            alert('Receipt deleted successfully!');
+        }
+    }
+
+    function downloadReceipt(index) {
+        const { name, date, total } = billHistory[index];
+
+        // Create a new PDF document
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Add content to the PDF
+        doc.setFontSize(18);
+        doc.text('Receipt', 105, 20, null, null, 'center');
+
+        doc.setFontSize(12);
+        doc.text(`Service Taker's Name: ${name}`, 20, 40);
+        doc.text(`Date: ${date}`, 20, 50);
+        doc.text(`Total: ₹${total.toFixed(2)}`, 20, 60);
+
+        // Footer
+        doc.setFontSize(10);
+        doc.text('Thank you for choosing Vishwalatarati Digital Solutions Pvt Ltd!', 105, 280, null, null, 'center');
+
+        // Save the PDF
+        doc.save(`Receipt_${name}_${date}.pdf`);
+    }
+
+    function searchBills() {
+        const searchName = document.getElementById('search-name').value.toLowerCase();
+        const tableBody = document.getElementById('history-table').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = '';
+        for (let bill of billHistory) {
+            if (bill.name.toLowerCase().includes(searchName)) {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${bill.name}</td>
+                    <td>${bill.date}</td>
+                    <td>₹${bill.total.toFixed(2)}</td>
+                    <td><button onclick="downloadReceipt(${billHistory.indexOf(bill)})">Download Receipt</button></td>
+                    <td><span class="delete-btn" onclick="confirmDelete(${billHistory.indexOf(bill)})">🗑️</span></td>
+                `;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
